@@ -53,7 +53,26 @@ class TestController extends Controller
 
         // Limit Offset
         // raw query
-        $data = DB::select("select * from foods limit 5");
+        // $data = DB::select("select * from foods limit 5");
+        
+        // Eloquent
+        // $data = Food::limit(5)->offset(10)->get();
+
+        // GROUP BY query builder
+        // $data = DB::table("food")->groupBy("category_id")->get();
+
+        // GROUP BY Select
+        // $data = DB::table("foods")
+        // ->select(["category_id", DB::raw("count(*) as count")])
+        // ->having("count",">","15")
+        // ->groupBy("category_id")
+        // ->get();
+
+        // INNER JOIN query builder
+        $data = DB::table("foods")
+        ->join("categories","foods.category_id","=","categories.id")
+        ->select(["foods.name", "foods.price", "categories.name"])
+        ->get();
         return response()->json($data);
     }
 }
