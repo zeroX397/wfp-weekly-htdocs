@@ -5,9 +5,9 @@ use App\Http\Controllers\FoodController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 
 // Route::get('/hello', function () {
 //     return view('hello');
@@ -66,4 +66,15 @@ Route::get("/admin/{administration?}", [TestController::class,"admin"]);
 Route::resource("/categories", CategoryController::class);
 Route::resource("/food", FoodController::class);
 
-Route::get("/tes-query", [TestController::class,"tesQuery"]);
+// Route::get("/category/show-total-foods", CategoryController::class);
+
+// Route::get("/tes-query", [TestController::class,"tesQuery"]);
+Route::get("/tes-template/home", function(){
+    return view("tes-template.home");
+});
+Route::get("/tes-template/search", function(){
+    return view("tes-template.search");
+});
+Route::get("/tes-template/product/{id}", function($id){
+    return view("tes-template.product", ["id" => $id]);
+});

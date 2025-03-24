@@ -69,9 +69,35 @@ class TestController extends Controller
         // ->get();
 
         // INNER JOIN query builder
+        // $data = DB::table("foods")
+        // ->join("categories","foods.category_id","=","categories.id")
+        // ->select(["foods.name as food", "foods.price", "categories.name as category"])
+        // ->get();
+
+        // INNER JOIN + ORDER BY 
+        // $data = DB::table("foods")
+        // ->join("categories","foods.category_id","=","categories.id")
+        // ->select(["foods.name as food", "foods.price", "categories.name as category"])
+        // ->orderBy("foods.name", "asc")
+        // ->get();
+
+        // $data = DB::select("select * from foods where price > ? and category_id = ?", [50000, 1]);
+
+        // Subquery
         $data = DB::table("foods")
-        ->join("categories","foods.category_id","=","categories.id")
-        ->select(["foods.name", "foods.price", "categories.name"])
+        ->select(["category_id", DB::raw("count(*) as count")])
+        ->groupBy("category_id")
+        ->get();
+        $avg = 0;
+        foreach($data as $d) {
+            $avg += $d->count;
+        }
+        $avg /= count($data);
+
+        $data = DB::table("foods")
+        ->select(["category_id", DB::raw("count(*) as count")])
+        ->having("count", ">", $avg)
+        ->groupBy("category_id")
         ->get();
         return response()->json($data);
     }

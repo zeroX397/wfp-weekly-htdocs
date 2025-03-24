@@ -3,15 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    public function showTotalFoods()
+    {
+        $data = DB::table("categories")
+            ->select(["categories.name", DB::raw("count(*) as count")])
+            ->leftJoin("foods", "categories.id", "=", "foods.category_id")
+            ->groupBy("categories.id")
+            ->groupBy("categories.name")
+            ->get();
+
+        return response()->json($data);
+    }
     public function index()
     {
-        return "Ini Index";
+
     }
 
     /**
