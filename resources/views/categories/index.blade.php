@@ -1,10 +1,8 @@
 @extends("layouts.adminlte")
 
-@section("sidebar:food", "active")
+@section("sidebar:categories", "active")
 
-
-@section("title", "Daftar Makanan")
-
+@section("title", "Daftar Kategori")
 @section("content")
     <!--begin::App Content Header-->
     <div class="app-content-header">
@@ -44,22 +42,14 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Name</th>
                                         <th>Category</th>
-                                        <th>Description</th>
-                                        <th>Nutrition</th>
-                                        <th>Price</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($food as $f)
+                                    @foreach ($categories as $c)
                                         <tr>
-                                            <td> {{ $f->id }} </td>
-                                            <td> {{ $f->name }} </td>
-                                            <td> {{ $f->category->name }} </td>
-                                            <td> {{ $f->description }} </td>
-                                            <td> {{ $f->nutrition_fact }} </td>
-                                            <td> {{ $f->price }} </td>
+                                            <td> {{ $c->id }} </td>
+                                            <td> {{ $c->name }} </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
