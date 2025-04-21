@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('categories', function (Blueprint $table) {
             $table->string('name', 50);
+            $table->string('image')->nullable(); // Add the 'image' column
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('categories', function (Blueprint $table) {
             $table->dropColumn(['name']);
+            $table->dropColumn(['image']); // Drop the 'image' column
         });
     }
 };

@@ -75,4 +75,8 @@ class CategoryController extends Controller
     {
         //
     }
+    public function showListFoods() {
+        $category = Category::find($_GET["idcat"]);
+        return response()->json($category);
+    }
 }

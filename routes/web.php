@@ -4,6 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Redirect;
 
 Route::get('/', function () {
     return view('welcome');
@@ -62,6 +63,9 @@ Route::get("/before_order", [TestController::class,"beforeOrder"]);
 Route::get("/menu/{pemesanan?}", [TestController::class,"menu"])->name("menu");
 
 Route::get("/admin/{administration?}", [TestController::class,"admin"]);
+
+Route::get("/categories/showListFoods", [CategoryController::class, "showListFoods"])->name("category.showListFoods");
+
 
 Route::resource("/categories", CategoryController::class);
 Route::resource("/food", FoodController::class);

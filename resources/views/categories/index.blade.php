@@ -34,7 +34,7 @@
                 <div class="col-md-12">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h3 class="card-title">Bordered Table</h3>
+
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -43,6 +43,8 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Category</th>
+                                        <th>Show Food List</th>
+                                        <th>Show Image</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -50,6 +52,40 @@
                                         <tr>
                                             <td> {{ $c->id }} </td>
                                             <td> {{ $c->name }} </td>
+                                            {{-- Show Food List --}}
+                                            <td><button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#food-list-modal" onclick="showFoodList('{{ $c->id }}')">
+                                                    Show
+                                                </button></td>
+
+                                            {{-- Show Image --}}
+                                            <td><button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#image-modal-{{ $c->id }}">
+                                                    Show
+                                                </button>
+                                                @push("modals")
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="image-modal-{{ $c->id }}" tabindex="-1">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Image for {{$c->name}}</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <img class="img-responsive" style="max-width: 250px;"
+                                                                        src="/storage/categories/{{ $c->image }}" alt="">
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Close</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endpush
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -76,4 +112,42 @@
     </div>
     <!--end::App Content-->
 
+    @stack("modals")
+    <div class="modal fade" id="food-list-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title-food-category">Food list for Category -</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modal-body-food-list">
+                    Food List
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showFoodList(idcat){
+            $.ajax({
+                type: "GET",
+                url: "/categories/showListFoods?idcat=" + idcat,
+                data:{
+                    idcat:idcat, 
+                    _token: '<?php echo csrf_token() ?>'}
+                success: function(data){
+                    console.log(data);
+                    $("#modal-title-food-category").html("Food list for Category " + data.category);
+                    let list = "<ul>";
+                    for (let i = 0; i < data.foods.length; i++){
+                        list += "<li>" + data.foods[i].name + "</li>";
+                    }
+                        list += "</ul>";
+                    $("#modal-body-food-list").html(list);
+                }
+            })
+        }
+    </script>
 @endsection
