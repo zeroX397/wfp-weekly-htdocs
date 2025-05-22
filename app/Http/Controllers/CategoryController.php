@@ -33,7 +33,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return "Ini Insert";
+        return view("categories.create");
     }
 
     /**
@@ -55,27 +55,36 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Category $category)
     {
-        return "Ini Edit $id";
+        return view("categories.update", compact("category"));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $category->name = $request->name;
+        $category->save();
+        return redirect()->route("categories.index")->with("status", "Update success");
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Category $category)
     {
-        //
+        try {
+            $category->delete();
+            return redirect()->route("categories.index")->with("status", "Delete success");
+        } catch (\Exception $e) {
+            return redirect()->route("categories.index")->with("status", "Please make sure that category does not have any food associated within it.");
+        }
+
     }
-    public function showListFoods() {
+    public function showListFoods()
+    {
         $category = Category::find($_GET["idcat"]);
         return response()->json($category);
     }

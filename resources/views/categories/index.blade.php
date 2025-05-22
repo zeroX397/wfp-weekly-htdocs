@@ -34,7 +34,12 @@
                 <div class="col-md-12">
                     <div class="card mb-4">
                         <div class="card-header">
-
+                            <h3 class="card-title">
+                                <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                    data-bs-target="#insert-category-modal">
+                                    Create new category (modal)
+                                </button>
+                            </h3>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -45,6 +50,7 @@
                                         <th>Category</th>
                                         <th>Show Food List</th>
                                         <th>Show Image</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -85,6 +91,16 @@
                                                         </div>
                                                     </div>
                                                 @endpush
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-primary"
+                                                    href="{{ route("categories.edit", $c->id) }}">Edit</a>
+                                                <form action="{{ route("categories.destroy", $c->id) }}" method="post">
+                                                    @method("DELETE")
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-danger"
+                                                        onclick="return confirm('Are you sure you want to delete category {{ $c->id }} - {{ $c->name }}?')">Delete</button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -130,24 +146,44 @@
         </div>
     </div>
     <script>
-        function showFoodList(idcat){
+        function showFoodList(idcat) {
             $.ajax({
                 type: "GET",
                 url: "/categories/showListFoods?idcat=" + idcat,
-                data:{
-                    idcat:idcat, 
-                    _token: '<?php echo csrf_token() ?>'}
-                success: function(data){
+                data: {
+                    idcat: idcat,
+                    _token: '<?php echo csrf_token() ?>'
+                }
+                            success: function (data) {
                     console.log(data);
                     $("#modal-title-food-category").html("Food list for Category " + data.category);
                     let list = "<ul>";
-                    for (let i = 0; i < data.foods.length; i++){
+                    for (let i = 0; i < data.foods.length; i++) {
                         list += "<li>" + data.foods[i].name + "</li>";
                     }
-                        list += "</ul>";
+                    list += "</ul>";
                     $("#modal-body-food-list").html(list);
                 }
             })
         }
     </script>
 @endsection
+
+@push('modals')
+    <div class="modal fade" id="insert-category-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">New Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+@endpush
