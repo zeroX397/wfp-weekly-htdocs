@@ -95,11 +95,14 @@
                                             <td>
                                                 <a class="btn btn-primary"
                                                     href="{{ route("categories.edit", $c->id) }}">Edit</a>
+                                                <button class="btn btn-warning" data-bs-target="#update-category-modal-a"
+                                                    data-bs-toggle="modal" onclick="getEditForm('{{ $c->id }}')">Edit (modal A)
+                                                </button>
                                                 <form action="{{ route("categories.destroy", $c->id) }}" method="post">
                                                     @method("DELETE")
                                                     @csrf
                                                     <button type="submit" class="btn btn-danger"
-                                                        onclick="return confirm('Are you sure you want to delete category {{ $c->id }} - {{ $c->name }}?')">Delete</button>
+                                                        onclick="return if(confirm('Are you sure you want to delete category {{ $c->id }} - {{ $c->name }}?') {deleteDataRemove('{{ $c->id }}')}">Delete</button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -154,7 +157,7 @@
                     idcat: idcat,
                     _token: '<?php echo csrf_token() ?>'
                 }
-                            success: function (data) {
+                                                        success: function (data) {
                     console.log(data);
                     $("#modal-title-food-category").html("Food list for Category " + data.category);
                     let list = "<ul>";
@@ -171,7 +174,7 @@
 
 @push('modals')
     <div class="modal fade" id="insert-category-modal" tabindex="-1">
-        <div class="modal-dialog">
+        {{-- <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">New Category</h5>
@@ -184,6 +187,55 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
+
+    <script>
+        function getEditForm(idcat) {
+            $.ajax({
+                type: "POST",
+                url: "/categories/getEditForm",
+                data: {
+                    id: idcat,
+                    _token: '<?php echo csrf_token() ?>'
+                },
+                success: function (data) {
+                    $("#modal-content").html(data);
+                }
+            })
+        }
+
+        function saveDataUpdate(idcat) {
+            $.ajax({
+                type: "POST",
+                url: "/categories/saveDataUpdate",
+                data: {
+                    id: idcat,
+                    name: name,
+                    _token: '<?php echo csrf_token() ?>'
+                },
+                success: function (data) {
+                    if(data.status == "oke") {
+                        $("#td_name_" + idcat).html(name);
+                    }
+                }
+            })
+        }
+
+        function deleteDataRemove(idcat) {
+            $.ajax({
+                type: "POST",
+                url: "{{ route('categories.destroy') }}",
+                data: {
+                    id: idcat,
+                    _token: '<?php echo csrf_token() ?>'
+                },
+                success: function (data) {
+                    if(data.status == "oke") {
+                        $("#tr_" + idcat).remove();
+                    }
+                }
+            })
+        }
+    </script>
 @endpush

@@ -60,6 +60,46 @@ class CategoryController extends Controller
         return view("categories.update", compact("category"));
     }
 
+    public function getEditFormA(Request $request)
+    {
+
+        $category = Category::find($request->id);
+        if (!$category) {
+            return response()->json(["status" => "error", "message" => "Category not found"]);
+        }
+        return view("categories.updateCategoryModalA", compact("category"));
+    }
+    public function getEditFormB(Request $request)
+    {
+        $id = $request->id;
+        $category = Category::find($request->id);
+        return view("categories.updateCategoryModalB", compact("category"));
+    }
+
+    public function saveDataUpdate(Request $request)
+    {
+        $id = $request->id;
+        $category = Category::find($id);
+        $category->name = $request->name;
+        $category->save();
+        return response()->json(array("status" => "Oke", "mag" => "data is up to date"), 200);
+    }
+
+    public function deleteData(Request $request)
+    {
+        $id = $request->id;
+        $category = Category::find($id);
+        if (!$category) {
+            return response()->json(["status" => "error", "message" => "Category not found"]);
+        }
+        try {
+            $category->delete();
+            return response()->json(["status" => "success", "message" => "Category deleted successfully"]);
+        } catch (\Exception $e) {
+            return response()->json(["status" => "error", "message" => "Category cannot be deleted because it has food associated with it"]);
+        }
+    }
+
     /**
      * Update the specified resource in storage.
      */

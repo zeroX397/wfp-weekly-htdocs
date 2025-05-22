@@ -65,6 +65,9 @@ Route::get("/menu/{pemesanan?}", [TestController::class,"menu"])->name("menu");
 Route::get("/admin/{administration?}", [TestController::class,"admin"]);
 
 Route::get("/categories/showListFoods", [CategoryController::class, "showListFoods"])->name("category.showListFoods");
+Route::get("/categories/getEditFormA", [CategoryController::class, "showListFoods"])->name("category.getEditFormB");
+Route::get("/categories/getEditFormB", [CategoryController::class, "showListFoods"])->name("category.getEditFormB");
+Route::get("/categories/deleteData", [CategoryController::class, "deleteData"])->name("category.deleteData");
 
 
 Route::resource("/categories", CategoryController::class);
