@@ -45,6 +45,7 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Name</th>
+                                        <th>Image</th>
                                         <th>Category</th>
                                         <th>Description</th>
                                         <th>Nutrition</th>
@@ -56,6 +57,13 @@
                                         <tr>
                                             <td> {{ $f->id }} </td>
                                             <td> {{ $f->name }} </td>
+                                            <td> 
+                                                @if ($f->filenames)
+                                                    @foreach ($f->filenames as $fn)
+                                                        <img src="/public/assets/img/{{ $f->id }}/{{ $fn }}" width="100px"><br><br>
+                                                    @endforeach
+                                                @endif
+                                            </td>
                                             <td> {{ $f->category->name }} </td>
                                             <td> {{ $f->description }} </td>
                                             <td> {{ $f->nutrition_fact }} </td>

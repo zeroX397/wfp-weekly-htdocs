@@ -3,7 +3,9 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\TestController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 Route::get('/', function () {
@@ -85,3 +87,21 @@ Route::get("/tes-template/search", function(){
 Route::get("/tes-template/product/{id}", function($id){
     return view("tes-template.product", ["id" => $id]);
 });
+Route::get("/login-test", function(Request $request){
+    if(Auth::attempt([
+        "email" => $request->email,
+        "password" => $request->password
+    ])){
+        $request->session()->regenerate();
+        return "Welcome, ".Auth::user()->name."!";
+    }
+    else {
+        return "Invalid username or password";
+    };
+});
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::post("file/uploadCategory/{id}", [CategoryController::class, "uploadPic"]);

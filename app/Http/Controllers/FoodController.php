@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Food;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class FoodController extends Controller
 {
@@ -12,9 +13,20 @@ class FoodController extends Controller
      */
     public function index()
     {
-        $food = Food::all();
-
-        return view("foods.index", ["food"=> $food]);
+        $food = Food::paginate(10);
+        foreach ($food as $p) {
+            $directory = public_path("images/foods/{$p->id}");
+            if (File::exists($directory)) {
+                $files = File::files($directory);
+                $filenames = [];
+                foreach ($files as $file) {
+                    $filenames[] = $file->getFilename();
+                }
+                $p['filenames'] = $filenames;
+            }
+        }
+        return view("foods.index", ["foods" => $food]);
+        // return view("foods.index", ["food"=> $food]);
     }
 
     /**

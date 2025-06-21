@@ -90,6 +90,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    
                                                 @endpush
                                             </td>
                                             <td>
@@ -98,12 +99,14 @@
                                                 <button class="btn btn-warning" data-bs-target="#update-category-modal-a"
                                                     data-bs-toggle="modal" onclick="getEditForm('{{ $c->id }}')">Edit (modal A)
                                                 </button>
-                                                <form action="{{ route("categories.destroy", $c->id) }}" method="post">
-                                                    @method("DELETE")
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-danger"
-                                                        onclick="return if(confirm('Are you sure you want to delete category {{ $c->id }} - {{ $c->name }}?') {deleteDataRemove('{{ $c->id }}')}">Delete</button>
-                                                </form>
+                                                @can("delete-category", Auth::user())
+                                                    <form action="{{ route("categories.destroy", $c->id) }}" method="post">
+                                                        @method("DELETE")
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-danger"
+                                                            onclick="return if(confirm('Are you sure you want to delete category {{ $c->id }} - {{ $c->name }}?') {deleteDataRemove('{{ $c->id }}')}">Delete</button>
+                                                    </form>
+                                                @endcan
                                             </td>
                                         </tr>
                                     @endforeach
@@ -157,7 +160,7 @@
                     idcat: idcat,
                     _token: '<?php echo csrf_token() ?>'
                 }
-                                                        success: function (data) {
+                                                            success: function (data) {
                     console.log(data);
                     $("#modal-title-food-category").html("Food list for Category " + data.category);
                     let list = "<ul>";
@@ -215,7 +218,7 @@
                     _token: '<?php echo csrf_token() ?>'
                 },
                 success: function (data) {
-                    if(data.status == "oke") {
+                    if (data.status == "oke") {
                         $("#td_name_" + idcat).html(name);
                     }
                 }
@@ -231,7 +234,7 @@
                     _token: '<?php echo csrf_token() ?>'
                 },
                 success: function (data) {
-                    if(data.status == "oke") {
+                    if (data.status == "oke") {
                         $("#tr_" + idcat).remove();
                     }
                 }

@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Policies\CategoryPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Http\Response;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // $this->registerPolicies();
+        Gate::define("delete-category", [CategoryPolicy::class, "delete"]);
     }
 }

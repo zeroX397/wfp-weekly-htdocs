@@ -5,9 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Auth\Access\Response;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -117,7 +114,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        $this->authorize("delete-category", Auth::user());
         try {
             $category->delete();
             return redirect()->route("categories.index")->with("status", "Delete success");
@@ -131,11 +127,4 @@ class CategoryController extends Controller
         $category = Category::find($_GET["idcat"]);
         return response()->json($category);
     }
-    public function uploadPic(Request $request, $id)
-    {
-        Storage::putFileAs("public/assets/img", $request->file("file_pic"), "img.jpg");
-        return redirect()->route("categories.index")->with("status", "Image Uploaded");
-
-    }
-
 }
